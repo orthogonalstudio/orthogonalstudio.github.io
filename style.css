@@ -1,0 +1,404 @@
+
+        /* ==========================================================================
+           1. CORE & GLOBAL STYLES
+           ========================================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* SPA Sayfa Gösterim Kontrolü */
+        .page-section {
+            display: none;
+        }
+
+            .page-section.active-page {
+                display: flex;
+            }
+
+        /* 1. Üst Çubuk */
+        .top-bar {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 60px;
+            font-size: 11.5px;
+            align-items: center;
+        }
+
+        .social-links a {
+            color: #899499;
+            text-decoration: none;
+            margin: 5px 10px;
+            transition: color 0.3s;
+        }
+
+            .social-links a:hover {
+                color: #AA4A44;
+            }
+
+        /* 2. Ana Navigasyon */
+        .main-nav {
+            width: 100%;
+            height: 130px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-container {
+            width: 960px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo img {
+            height: 56px;
+        }
+
+        .menu {
+            align-self: center;
+            margin-bottom: 15px;
+        }
+
+            .menu a {
+                font-weight: 700;
+                font-size: 13pt;
+                color: #A9A9A9;
+                text-decoration: none;
+                margin-left: 15px;
+                text-transform: lowercase;
+                transition: color 0.3s;
+                cursor: pointer;
+            }
+
+                .menu a:hover {
+                    color: #936F6F;
+                }
+
+                .menu a.active {
+                    color: #AA4A44;
+                }
+
+        /* 3. Genel İçerik Yapısı */
+        .content-wrapper {
+            width: 960px;
+            margin: 0 auto;
+            position: relative;
+            flex-direction: column;
+        }
+
+        /* --- GAMES PAGE (SLIDER) --- */
+        .image-container {
+            width: 960px;
+            height: 540px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #333;
+            position: relative;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .slider-track img {
+                width: 960px;
+                height: 540px;
+                object-fit: cover;
+                flex-shrink: 0;
+                display: block;
+            }
+
+        .spec-games-container {
+            cursor: zoom-in;
+        }
+
+        .game-nav-btn {
+            position: absolute;
+            top: 270px;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 20px;
+            width: 46px;
+            height: 70px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+
+            .game-nav-btn.prev-game {
+                left: -70px;
+            }
+
+            .game-nav-btn.next-game {
+                right: -70px;
+            }
+
+            .game-nav-btn:hover {
+                background: #222;
+                border-color: #AA4A44;
+                color: #AA4A44;
+                box-shadow: 0 0 15px rgba(170, 74, 68, 0.2);
+            }
+
+            .game-nav-btn:active {
+                transform: translateY(-50%) scale(0.95);
+            }
+
+            .game-nav-btn.disabled {
+                opacity: 0.75 !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+                border-color: rgba(255, 255, 255, 0.05) !important;
+                box-shadow: none !important;
+                color: rgba(255, 255, 255, 0.2) !important;
+                background: #1a1a1a !important;
+            }
+
+        /* --- PRESENTATION SECTION --- */
+        .presentation-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 22px;
+            margin-bottom: 40px;
+            flex-wrap: nowrap;
+        }
+
+        .presentation-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #A9A9A9;
+            height: 26px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: lowercase;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            outline: none;
+            width: 150px;
+            padding: 0 4px;
+            text-align: center;
+        }
+
+            /* C butonu ve Numaralar için küçültülmüş kare görünüm */
+            .presentation-btn.btn-nav-spec {
+                width: 26px;
+                padding: 0;
+            }
+
+            .presentation-btn:hover {
+                background-color: #AA4A44;
+                border-color: #AA4A44;
+                color: white;
+            }
+
+            .presentation-btn.active {
+                background-color: #AA4A44;
+                border-color: #AA4A44;
+                color: white;
+            }
+
+            /* Dosya/Veri olmadığında butonların pasif görünümü (Daha belirgin hale getirildi) */
+            .presentation-btn.disabled {
+                opacity: 0.45 !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+                border-color: rgba(255, 255, 255, 0.2) !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+                background: transparent !important;
+            }
+
+        /* İnce Dikey Ayırıcı Çizgiler */
+        .presentation-v-line {
+            width: 1px;
+            height: 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 0 2px;
+            align-self: center;
+        }
+
+        /* --- STUDIO PAGE --- */
+        .about-content {
+            width: 100%;
+            padding: 20px 25px;
+            text-align: justify;
+            display: block;
+        }
+
+            .about-content p {
+                font-weight: 500;
+                color: #888888;
+                font-size: 13px;
+                line-height: 1.5;
+                margin-bottom: 15px;
+            }
+
+                .about-content p:first-of-type {
+                    margin-bottom: 35px;
+                }
+
+        .info-links-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+            .info-links-row + .info-links-row {
+                border-top: none;
+            }
+
+        .row-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #888888;
+            text-transform: lowercase;
+        }
+
+        .row-links {
+            display: flex;
+            gap: 10px;
+        }
+
+            .row-links a {
+                color: #888888;
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 500;
+                text-transform: lowercase;
+                transition: color 0.3s ease;
+            }
+
+        .info-links-row:hover .row-title {
+            color: #AA4A44;
+        }
+
+        .row-links a:hover {
+            color: #AA4A44 !important;
+        }
+
+        /* --- ECCLESIASTES (VAIZ) PAGE --- */
+        .vaiz-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            padding: 20px;
+            max-width: 610px;
+            margin: auto;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            text-align: justify;
+            color: #A9A9A9;
+        }
+
+        /* --- LIGHTBOX --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 5000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000 !important;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        #lightbox-img {
+            max-width: 92%;
+            max-height: 92%;
+            object-fit: contain;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+        }
+
+        .prev-btn, .next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 60px;
+            cursor: pointer;
+            padding: 20px;
+            z-index: 5001;
+        }
+
+        .prev-btn {
+            left: 20px;
+        }
+
+        .next-btn {
+            right: 20px;
+        }
+
+            .prev-btn:hover, .next-btn:hover {
+                color: #AA4A44;
+            }
+
+        /* NAV-PLUS İŞARETİ */
+        .nav-plus {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 24px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+            z-index: 1000;
+            display: inline-block;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+            .nav-plus:hover {
+                color: #A9A9A9;
+            }
+
+            .nav-plus.active-close {
+                color: #AA4A44 !important;
+                transform: rotate(45deg) scale(1.1);
+            }
