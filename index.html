@@ -440,16 +440,13 @@
             <div class="slider-track" id="slider-track"></div>
         </div>
 
-        <!-- PRESENTATION BÖLÜMÜ -->
         <div class="presentation-section" id="presentation-controls">
-            <!-- C, 1, 2, 3.. Buton Grubu -->
             <div id="dynamic-image-nav" style="display: flex; gap: 6px; align-items: center;"></div>
 
-            <!-- İkinci Dikey Çizgi -->
             <div class="presentation-v-line" id="v-line-2"></div>
 
-            <a href="https://www.youtube.com/watch?v=pTkEwnbjX24" target="_blank" class="presentation-btn" id="btn-trailer">watch trailer</a>
-            <a href="https://store.steampowered.com/" target="_blank" class="presentation-btn" id="btn-steam">wishlist on steam</a>
+            <a class="presentation-btn disabled" id="btn-trailer">watch trailer</a>
+            <a class="presentation-btn disabled" id="btn-steam">wishlist on steam</a>
         </div>
     </main>
 
@@ -629,32 +626,15 @@
             buildImageNavigation();
             updateButtonStates();
 
-            const activeGame = gamesData[currentGameIndex];
-
-            if (vLine2) vLine2.style.display = "block";
-
-            // --- TRAILER BUTONU ---
+            // Butonlar her zaman disabled ve href'siz olacak şekilde sabitlendi
             if (btnTrailer) {
-                btnTrailer.style.display = "inline-flex";
-                if (activeGame.hasTrailer && activeGame.videoUrl && activeGame.videoUrl !== "#") {
-                    btnTrailer.href = activeGame.videoUrl;
-                    btnTrailer.classList.remove("disabled");
-                } else {
-                    btnTrailer.removeAttribute("href");
-                    btnTrailer.classList.add("disabled");
-                }
+                btnTrailer.removeAttribute("href");
+                btnTrailer.classList.add("disabled");
             }
 
-            // --- STEAM BUTONU ---
             if (btnSteam) {
-                btnSteam.style.display = "inline-flex";
-                if (activeGame.steamUrl && activeGame.steamUrl !== "#") {
-                    btnSteam.href = activeGame.steamUrl;
-                    btnSteam.classList.remove("disabled");
-                } else {
-                    btnSteam.removeAttribute("href");
-                    btnSteam.classList.add("disabled");
-                }
+                btnSteam.removeAttribute("href");
+                btnSteam.classList.add("disabled");
             }
         }
 
@@ -675,10 +655,16 @@
                     if (imgIdx === currentImageIndex) {
                         btn.classList.add("active");
                     }
-                    btn.addEventListener("click", () => {
-                        currentImageIndex = imgIdx;
-                        updateGameDOM(currentImageIndex);
-                    });
+                    
+                    // Sadece 0. index (ilk görsel) aktif kalsın, diğerleri disable yapılsın
+                    if (imgIdx === 0) {
+                        btn.addEventListener("click", () => {
+                            currentImageIndex = imgIdx;
+                            updateGameDOM(currentImageIndex);
+                        });
+                    } else {
+                        btn.classList.add("disabled");
+                    }
                 } else {
                     btn.classList.add("disabled"); // İmaj olmayan sayfaları pasif kilitli yap
                 }
