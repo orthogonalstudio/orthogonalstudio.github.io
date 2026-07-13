@@ -141,7 +141,7 @@
                 const btn = document.createElement("button");
                 btn.classList.add("presentation-btn", "btn-nav-spec");
 
-                btn.textContent = (imgIdx === 0) ? "0" : imgIdx;
+                btn.textContent = (imgIdx === 0) ? "C" : imgIdx;
 
                 if (imgIdx < activeGame.images.length) {
                     if (imgIdx === currentImageIndex) {
