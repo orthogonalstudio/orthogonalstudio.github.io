@@ -42,9 +42,11 @@ const dynamicImageNav = document.getElementById("dynamic-image-nav");
 const prevGameBtn = document.getElementById("prev-game");
 const nextGameBtn = document.getElementById("next-game");
 
+const btnCover = document.getElementById("btn-cover");
 const btnTrailer = document.getElementById("btn-trailer");
 const btnSteam = document.getElementById("btn-steam");
 
+const vLine1 = document.getElementById("v-line-1");
 const vLine2 = document.getElementById("v-line-2");
 
 const lightbox = document.getElementById("lightbox");
@@ -111,7 +113,8 @@ function renderTrackImages(customSequence = null) {
 function updateGameDOM(targetActiveIndex = 0) {
     if (!sliderTrack) return;
 
-    const offset = targetActiveIndex * 100;
+    currentImageIndex = targetActiveIndex;
+    const offset = currentImageIndex * 100;
     sliderTrack.style.transform = `translateX(-${offset}%)`;
 
     // Sadece ilk oyun (Mosquitos) için alt buton panelini göster, diğerlerinde gizle
@@ -126,15 +129,37 @@ function updateGameDOM(targetActiveIndex = 0) {
     buildImageNavigation();
     updateButtonStates();
 
-    // Butonlar her zaman disabled ve href'siz olacak şekilde sabitlendi
-    if (btnTrailer) {
-        btnTrailer.removeAttribute("href");
-        btnTrailer.classList.add("disabled");
+    const activeGame = gamesData[currentGameIndex];
+
+    // C Butonu Durumu
+    if (btnCover) {
+        if (currentImageIndex === 0) {
+            btnCover.classList.add("active");
+        } else {
+            btnCover.classList.remove("active");
+        }
     }
 
+    // Trailer Butonu Durumu
+    if (btnTrailer) {
+        if (activeGame.hasTrailer && activeGame.videoUrl && activeGame.videoUrl !== "#") {
+            btnTrailer.href = activeGame.videoUrl;
+            btnTrailer.classList.remove("disabled");
+        } else {
+            btnTrailer.removeAttribute("href");
+            btnTrailer.classList.add("disabled");
+        }
+    }
+
+    // Steam Butonu Durumu
     if (btnSteam) {
-        btnSteam.removeAttribute("href");
-        btnSteam.classList.add("disabled");
+        if (activeGame.steamUrl && activeGame.steamUrl !== "#") {
+            btnSteam.href = activeGame.steamUrl;
+            btnSteam.classList.remove("disabled");
+        } else {
+            btnSteam.removeAttribute("href");
+            btnSteam.classList.add("disabled");
+        }
     }
 }
 
@@ -146,31 +171,19 @@ function buildImageNavigation() {
     if (currentGameIndex !== 0) return;
 
     const activeGame = gamesData[currentGameIndex];
-    const totalButtonsToShow = Math.max(activeGame.images.length, 7); // En az 7 buton (c + 1..6) üretir
 
-    for (let imgIdx = 0; imgIdx < totalButtonsToShow; imgIdx++) {
+    for (let imgIdx = 1; imgIdx < activeGame.images.length; imgIdx++) {
         const btn = document.createElement("button");
         btn.classList.add("presentation-btn", "btn-nav-spec");
+        btn.textContent = imgIdx;
 
-        btn.textContent = (imgIdx === 0) ? "C" : imgIdx;
-
-        if (imgIdx < activeGame.images.length) {
-            if (imgIdx === currentImageIndex) {
-                btn.classList.add("active");
-            }
-
-            // Sadece 0. index (ilk görsel) aktif kalsın, diğerleri disable yapılsın
-            if (imgIdx === 0) {
-                btn.addEventListener("click", () => {
-                    currentImageIndex = imgIdx;
-                    updateGameDOM(currentImageIndex);
-                });
-            } else {
-                btn.classList.add("disabled");
-            }
-        } else {
-            btn.classList.add("disabled"); // İmaj olmayan sayfaları pasif kilitli yap
+        if (imgIdx === currentImageIndex) {
+            btn.classList.add("active");
         }
+
+        btn.addEventListener("click", () => {
+            updateGameDOM(imgIdx);
+        });
 
         dynamicImageNav.appendChild(btn);
     }
@@ -193,6 +206,14 @@ function switchGame(direction) {
     if (direction === 'next' && currentGameIndex === gamesData.length - 1) return;
     if (direction === 'prev' && currentGameIndex === 0) return;
 
+    const targetGameIndex = (direction === 'next') ? currentGameIndex + 1 : currentGameIndex - 1;
+
+    // Eğer diğer bir oyuna geçiliyorsa paneli ANINDA kapatıyoruz.
+    // İlk oyuna geri dönüyorsak paneli burada değil, geçiş tamamlandıktan sonra (setTimeout içinde) açıyoruz.
+    if (presentationControls && targetGameIndex !== 0) {
+        presentationControls.style.display = "none";
+    }
+
     const previousGameIndex = currentGameIndex;
     const previousImageIndex = currentImageIndex;
 
@@ -200,10 +221,9 @@ function switchGame(direction) {
     else currentGameIndex--;
 
     currentImageIndex = 0;
-    updateGameDOM(0);
 
     const oldImg = gamesData[previousGameIndex].images[previousImageIndex];
-    const newImg = gamesData[currentGameIndex].images[currentImageIndex];
+    const newImg = gamesData[currentGameIndex].images[0];
     const transitionSequence = (direction === 'next') ? [oldImg, newImg] : [newImg, oldImg];
 
     renderTrackImages(transitionSequence);
@@ -222,6 +242,7 @@ function switchGame(direction) {
         sliderTrack.style.transform = "translateX(0%)";
         sliderTrack.offsetHeight;
         sliderTrack.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+        updateGameDOM(0);
     }, 600);
 }
 
@@ -253,6 +274,8 @@ function navigateLightbox(direction) {
 // --- 6. GLOBAL LISTENERS ---
 nextGameBtn?.addEventListener("click", () => switchGame('next'));
 prevGameBtn?.addEventListener("click", () => switchGame('prev'));
+
+btnCover?.addEventListener("click", () => updateGameDOM(0));
 
 imageContainer?.addEventListener("click", openLightbox);
 lightbox?.addEventListener("click", closeLightbox);
